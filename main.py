@@ -46,9 +46,8 @@ async def shedulers(bot):
     # aioschedule.every(5).minutes.do(job, bot)
     time_start1 = '5:00'
     aioschedule.every().day.at(time_start1).do(day_job, bot)
-    aioschedule.every().day.at('5:30').do(day_job, bot)
+    aioschedule.every().day.at('5:35').do(day_job, bot)
     aioschedule.every().day.at('14:00').do(csi_day_job, bot)
-
 
     while True:
         await aioschedule.run_pending()
@@ -65,7 +64,6 @@ async def main():
     dp.include_router(csi_handlers.router)
     dp.include_router(echo.router)
     asyncio.create_task(shedulers(bot))
-    # await send_report(bot)
     # await day_job(bot)
     # await csi_day_job(bot)
 
@@ -73,7 +71,7 @@ async def main():
     try:
         await bot.send_message(
             conf.tg_bot.admin_ids[0], f'Бот АУП Этажи запущен.')
-    except:
+    except Exception:
         err_log.critical(f'Не могу отравить сообщение {conf.tg_bot.admin_ids[0]}')
     await dp.start_polling(bot)
 
@@ -81,6 +79,5 @@ async def main():
 if __name__ == '__main__':
     try:
         asyncio.run(main())
-        # asyncio.run(buy(2))
     except (KeyboardInterrupt, SystemExit):
         logger.info('Bot stopped!')
