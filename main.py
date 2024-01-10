@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 
 import aioschedule
 from aiogram import Bot, Dispatcher
@@ -42,11 +43,14 @@ async def delete_user(bot):
     logger.info(f'Удалено: {del_count}')
 
 
+async def test(bot):
+    await bot.send_message(chat_id=conf.tg_bot.GROUP_ID, text=str(datetime.datetime.now()))
+
 async def shedulers(bot):
     # aioschedule.every(5).minutes.do(job, bot)
     time_start1 = '5:00'
     aioschedule.every().day.at(time_start1).do(day_job, bot)
-    aioschedule.every().day.at('05:56').do(day_job, bot)
+    aioschedule.every().minute().do(test, bot)
     aioschedule.every().day.at('14:00').do(csi_day_job, bot)
 
     while True:
