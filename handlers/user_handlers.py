@@ -178,8 +178,10 @@ async def send_menu(message: Message, bot: Bot, state: FSMContext):
 
     if message.text == 'Хочу задать вопрос':
         user = get_or_create_user(message.from_user)
-        row = [datetime.datetime.now(tz=tz).strftime('%Y.%m.%d %H:%M'), 'Хочу задать вопрос', user.fio or user.tg_id, f'@{user.username}']
+        row = [datetime.datetime.now(tz=tz).strftime('%Y.%m.%d %H:%M'),  user.tg_id, 'Хочу задать вопрос', user.fio or user.tg_id, f'@{user.username}']
         await write_to_table(rows=[row], from_start=True, sheets_num=2)
+        await bot.send_message(chat_id=conf.tg_bot.GROUP_ID,
+                               text=f'У сотрудника {user.fio or user.username or user.tg_id} имеется вопрос по адаптации, свяжитесь с ним, чтобы разобраться в проблеме.')
 
 
 # Обратная связь

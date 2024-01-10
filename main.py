@@ -46,7 +46,7 @@ async def shedulers(bot):
     # aioschedule.every(5).minutes.do(job, bot)
     time_start1 = '5:00'
     aioschedule.every().day.at(time_start1).do(day_job, bot)
-    aioschedule.every().day.at('5:35').do(day_job, bot)
+    aioschedule.every().day.at('05:56').do(day_job, bot)
     aioschedule.every().day.at('14:00').do(csi_day_job, bot)
 
     while True:
