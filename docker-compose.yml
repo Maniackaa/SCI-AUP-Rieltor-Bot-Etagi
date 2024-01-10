@@ -1,0 +1,49 @@
+version: '3'
+
+volumes:
+  pg_etagi_data:
+  pgadmin-data:
+
+services:
+  db_postgres_aup_etagi:
+    container_name: db_postgres_aup_etagi_container
+    image: postgres:14-alpine
+    env_file: .env
+    volumes:
+      - pg_etagi_data:/var/lib/postgresql/data
+    ports:
+      - "25432:5432"
+    restart: unless-stopped
+
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:7.3
+    env_file: .env
+    environment:
+      PGADMIN_DEFAULT_EMAIL: $PGADMIN_DEFAULT_EMAIL
+      PGADMIN_DEFAULT_PASSWORD: $PGADMIN_DEFAULT_PASSWORD
+
+    depends_on:
+      - db_postgres_aup_etagi
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+
+
+  bot:
+    restart: always
+    build: .
+    env_file: .env
+    depends_on:
+      - db_postgres_aup_etagi
+    volumes:
+      - ./logs:/app/logs
+      - ./alembic:/app/alembic
