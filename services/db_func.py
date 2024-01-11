@@ -243,7 +243,7 @@ def delete_user_from_tg_id(tg_id):
 def get_all_lexicon() -> list[Lexicon]:
     session = Session()
     with session:
-        lexicons = session.query(Lexicon).all()
+        lexicons = session.query(Lexicon).order_by('id').all()
         return lexicons
 
 
