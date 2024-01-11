@@ -239,6 +239,14 @@ def delete_user_from_tg_id(tg_id):
     except Exception as err:
         logger.error(f'Ошибка удаления пользователя: {err}')
 
+
+def get_all_lexicon() -> list[Lexicon]:
+    session = Session()
+    with session:
+        lexicons = session.query(Lexicon).all()
+        return lexicons
+
+
 if __name__ == '__main__':
     asyncio.run(report())
     # clear_rieltor_code(['1241424124124124124124'])

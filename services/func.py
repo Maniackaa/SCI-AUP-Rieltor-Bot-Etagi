@@ -114,7 +114,7 @@ def get_history(limit):
 
 async def send_message_to_manager(bot, user, text_msg):
     await bot.send_message(
-        chat_id=config.tg_bot.GROUP_ID,
+        chat_id=conf.tg_bot.GROUP_ID,
         # chat_id='EtagiManagers',
         text=(
             f'{text_msg}\n\n'
@@ -124,28 +124,3 @@ async def send_message_to_manager(bot, user, text_msg):
         parse_mode='HTML'
     )
 
-
-async def send_report_to_users(users_to_send: list[User], bot: Bot):
-    user_stats = await read_stats_from_table()
-    for user in users_to_send:
-        try:
-            if user.rieltor_code in user_stats:
-                logger.debug(f'Стата пользователя {user} найдена')
-                text = format_user_sats(user_stats[user.rieltor_code],
-                                        user_stats['date'])
-                if text != '*показатели обновляются раз в неделю по понедельникам':
-                    await bot.send_message(user.tg_id, text)
-                    await asyncio.sleep(0.1)
-                    logger.info(f'Сообщение пользователю {user.fio or user.tg_id} отправлено')
-        except TelegramForbiddenError as err:
-            logger.warning(f'Ошибка отправки сообщения для {user}: {err}')
-            logger.info('Удаляем пользователя из базы')
-            delete_user_from_tg_id(user.tg_id)
-            log_text = f'Пользователь {user} удален из базы из-за {err}'
-            logger.info(log_text)
-            write_log(user.id, log_text)
-            await add_log_to_gtable(user, log_text)
-        except Exception as err:
-            # await bot.send_message(config.tg_bot.admin_ids[0], 'Сообщение пользователю {user.fio or user.tg_id} НЕ отправлено')
-            logger.error(f'ошибка отправки сообщения пользователю {user}: {err}', exc_info=False)
-            err_log.error(f'ошибка отправки сообщения пользователю {user}: {err}', exc_info=True)

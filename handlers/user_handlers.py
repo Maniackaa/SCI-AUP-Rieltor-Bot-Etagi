@@ -1,3 +1,4 @@
+import asyncio
 import datetime
 
 import aioschedule
@@ -12,6 +13,7 @@ from aiogram.fsm.context import FSMContext
 from database.db import History, Menu, User, Lexicon
 from keyboards.keyboards import start_menu_kb, start_kb, contact_kb, \
     start_menu_kb2
+from services.db_func import get_all_lexicon
 
 from services.func import get_or_create_user, update_user, get_menu_from_index, \
     write_log, send_message_to_manager, \
@@ -193,3 +195,13 @@ async def input_feedback(message: Message, bot: Bot, state: FSMContext):
     await write_to_table(rows=[row], from_start=True, sheets_num=2)
     await message.answer('Ваща обратная связь отправлена', reply_markup=start_menu_kb2(1, '0'))
     await state.clear()
+
+
+
+@router.message(Command(commands=["test_text"]))
+async def process_start_command(message: Message, bot: Bot):
+    lexicons = get_all_lexicon()
+    for lexicon in lexicons:
+        text = f'{lexicon.id}. {lexicon.name}\n\n{lexicon.text}'
+        await message.answer(text=text)
+        await asyncio.sleep(0.2)

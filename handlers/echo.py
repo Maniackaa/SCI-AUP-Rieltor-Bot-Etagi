@@ -1,3 +1,4 @@
+import asyncio
 import re
 
 from aiogram import Router, F, Bot
@@ -7,6 +8,7 @@ from aiogram.filters import Command, BaseFilter
 from aiogram.types import Message, CallbackQuery, Chat
 
 from config_data.config import conf
+from services.db_func import get_all_lexicon
 from services.func import get_or_create_user, write_log, check_user
 from services.google_func import add_log_to_gtable
 
@@ -164,4 +166,5 @@ async def send_echo(message: Message):
 @router.callback_query()
 async def send_echo(callback: CallbackQuery):
     print('echo callback:', callback.data)
+
 
